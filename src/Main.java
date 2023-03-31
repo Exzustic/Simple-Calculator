@@ -27,8 +27,8 @@ public class Main {
         } catch (ArithmeticException | IOException e) {
             throw new RuntimeException(e);
         }
-        try(FileWriter wr = new FileWriter("input.txt",true)){
-            wr.write(" = "+answer);
+        try(FileWriter wr = new FileWriter("output.txt",false)){
+            wr.write(answer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
