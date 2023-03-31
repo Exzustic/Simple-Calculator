@@ -1,34 +1,37 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) {
-        String answer;
-        try(BufferedReader br = new BufferedReader(new FileReader("input.txt"))){
-            String[] str = br.readLine().split(" ");
-            double a = Double.parseDouble(str[0]);
-            double b = Double.parseDouble(str[2]);
-            switch (str[1]) {
-                case "+" -> answer =  Double.toString(a + b);
-                case "-" -> answer =  Double.toString(a - b);
-                case "*" -> answer =  Double.toString(a * b);
-                case "/" -> {
-                    if (str[2].equals("0")) {
-                        answer = "Error! Division by zero";
-                    } else
-                        answer = Double.toString(a / b);
+        StringBuilder answer = null;
+        try(BufferedReader br = new BufferedReader(new FileReader("input.txt"))) {
+            while(br.ready()) {
+                try {
+                    String[] str = br.readLine().split(" ");
+                    answer = new StringBuilder(str[0] + " " + str[1] + " " + str[2] + " = ");
+                    double a = Double.parseDouble(str[0]);
+                    double b = Double.parseDouble(str[2]);
+                    switch (str[1]) {
+                        case "+" -> answer.append(a + b);
+                        case "-" -> answer.append(a - b);
+                        case "*" -> answer.append(a * b);
+                        case "/" -> {
+                            if (str[2].equals("0")) {
+                                answer.append("Error! Division by zero");
+                            } else
+                                answer.append(a / b);
+                        }
+                        default -> answer.append("Operation Error!");
+                    }
+                } catch (NumberFormatException e) {
+                    assert answer != null;
+                    answer.append("Error! Not number");
                 }
-                default -> answer = "Operation Error!";
+                try (FileWriter wr = new FileWriter("output.txt", true)) {
+                    wr.write(answer+"\n");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
-        } catch (NumberFormatException e){
-            answer = "Error! Not number";
-        } catch (ArithmeticException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        try(FileWriter wr = new FileWriter("output.txt",false)){
-            wr.write(answer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
